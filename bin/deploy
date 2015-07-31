@@ -18,6 +18,8 @@ export PATH="$LSSTSW/anaconda/bin:$PATH"
 export PATH="$LSSTSW/lfs/bin:$PATH"
 export PATH="$LSSTSW/bin:$PATH"
 
+export CURL=/usr/bin/curl
+
 cd $LSSTSW
 
 test -f "$LSSTSW/anaconda/.deployed" || ( # Anaconda
@@ -33,7 +35,7 @@ test -f "$LSSTSW/anaconda/.deployed" || ( # Anaconda
 
     ana_file_name="Anaconda-${ANACONDA_VERSION}-${ana_platform}.sh"
     echo "::: Deploying Anaconda ${ANACONDA_VERSION} for ${ana_platform}"
-    curl -# -L -O http://repo.continuum.io/archive/${ana_file_name}
+    ${CURL} -# -L -O http://repo.continuum.io/archive/${ana_file_name}
     bash ${ana_file_name} -b -p "$LSSTSW/anaconda"
 
     touch "$LSSTSW/anaconda/.deployed"
@@ -52,8 +54,8 @@ test -f "$LSSTSW/lfs/.git.deployed" || ( # git
     echo "::: Deploying git"
     cd sources
     GIT_BASE_URL="https://www.kernel.org/pub/software/scm/git"
-    curl -# -L -O ${GIT_BASE_URL}/git-${GIT_VERSION}.tar.gz
-    curl -# -L -O ${GIT_BASE_URL}/git-manpages-${GIT_VERSION}.tar.gz
+    ${CURL} -# -L -O ${GIT_BASE_URL}/git-${GIT_VERSION}.tar.gz
+    ${CURL} -# -L -O ${GIT_BASE_URL}/git-manpages-${GIT_VERSION}.tar.gz
     tar xzf git-${GIT_VERSION}.tar.gz
     cd git-${GIT_VERSION}
     ./configure --prefix="$LSSTSW/lfs"
@@ -82,7 +84,7 @@ test -f "$LSSTSW/eups/$EUPS_VERSION/.deployed" || ( # EUPS
     fi
 
     cd sources
-    curl -# -L -o eups-$EUPS_VERSION.tar.gz https://github.com/RobertLuptonTheGood/eups/archive/$EUPS_VERSION.tar.gz
+    ${CURL} -# -L -o eups-$EUPS_VERSION.tar.gz https://github.com/RobertLuptonTheGood/eups/archive/$EUPS_VERSION.tar.gz
     tar xzf eups-$EUPS_VERSION.tar.gz
     cd eups-$EUPS_VERSION
     ./configure --prefix="$LSSTSW/eups/$EUPS_VERSION" --with-python="$LSSTSW/anaconda/bin/python" --with-eups="$LSSTSW/stack"
@@ -127,7 +129,7 @@ test -f "$LSSTSW/lsst_build/.deployed" || ( # Clone lsst_build
 test -f "${LSSTSW}/lfs/bin/numdiff" || (
     echo "::: Deploying numdiff"
     cd ${LSSTSW}/sources
-    curl -# -L -O http://download-mirror.savannah.gnu.org/releases//numdiff/numdiff-5.8.1.tar.gz
+    ${CURL} -# -L -O http://download-mirror.savannah.gnu.org/releases//numdiff/numdiff-5.8.1.tar.gz
     tar -xzf numdiff-5.8.1.tar.gz
     cd numdiff-5.8.1
     ./configure --prefix=${LSSTSW}/lfs --disable-nls
